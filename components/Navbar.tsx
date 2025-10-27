@@ -162,17 +162,18 @@ export default function Navbar() {
                 </a>
 
                 <a
-                  className={`relative px-3 py-3.5 text-[10px] font-['Press_Start_2P'] tracking-wider transition-all duration-100 hover:translate-y-0.5 active:translate-y-1`}
+                  href="/summarize"
+                  className={`relative ${pathname === '/summarize' ? 'px-10' : 'px-5'} py-3.5 text-[10px] font-['Press_Start_2P'] tracking-wider transition-all duration-100 hover:translate-y-0.5 active:translate-y-1`}
                   onMouseEnter={() => soundManager.playButtonHover()}
                   onMouseDown={() => soundManager.playButtonPress()}
                   style={{
-                    background: 'linear-gradient(180deg,rgb(26, 33, 50) 0%,rgb(16, 23, 40) 100%)',
+                    background: pathname === '/summarize' ? 'linear-gradient(180deg, #3f4961 0%, #545d72 100%)' : 'linear-gradient(180deg, #2a3550 0%, #1a2540 100%)',
                     border: '2px solid #0f1419',
-                    color: '#FF008860',
+                    color: '#ff0088',
                     textShadow: '0 0 8px #ff0088',
                     boxShadow: 'inset 0 -4px 0 0 rgba(0, 0, 0, 0.5), inset 0 4px 0 0 rgba(255, 255, 255, 0.1), inset -4px 0 0 0 rgba(0, 0, 0, 0.4), inset 4px 0 0 0 rgba(255, 255, 255, 0.1), 0 4px 0 0 #0f1419, 4px 0 0 0 rgba(0, 0, 0, 0.3), -4px 0 0 0 rgba(0, 0, 0, 0.3), 0 -4px 0 0 rgba(0, 0, 0, 0.2)'
                   }}>
-                  COMING SOON!
+                  AI SUMMARY
                 </a>
 
                 <a
@@ -503,17 +504,18 @@ export default function Navbar() {
                 </a>
 
                 <a
+                  href="/summarize"
                   onClick={handleNavClick}
                   className={`block w-full text-center py-4 px-6 mb-3 text-[10px] font-['Press_Start_2P'] tracking-wider transition-all duration-100 hover:translate-y-0.5 active:translate-y-1`}
                   style={{
-                    background: 'linear-gradient(180deg,rgb(26, 33, 50) 0%,rgb(16, 23, 40) 100%)',
+                    background: pathname === '/summarize' ? 'linear-gradient(180deg, #3f4961 0%, #545d72 100%)' : 'linear-gradient(180deg, #2a3550 0%, #1a2540 100%)',
                     border: '2px solid #0f1419',
-                    color: '#FF008860',
-                    textShadow: '0 0 8px #ff008840',
+                    color: '#ff0088',
+                    textShadow: '0 0 8px #ff0088',
                     boxShadow: 'inset 0 -4px 0 0 rgba(0, 0, 0, 0.5), inset 0 4px 0 0 rgba(255, 255, 255, 0.1), 0 4px 0 0 #0f1419'
                   }}
                 >
-                  COMING SOON!
+                  AI SUMMARY
                 </a>
 
                 <a

@@ -26,6 +26,7 @@ DEVFEED is a retro-styled developer news aggregator that brings together trendin
 - **📱 Responsive Design**: Works perfectly on desktop, tablet, and mobile devices
 - **🔐 User Authentication**: Secure login/signup powered by Clerk
 - **💾 Favorites System**: Save items across all platforms with Firebase integration
+- **🤖 AI-Powered Summaries**: Personalized "Today's Top Tech 3 Lines" summaries with database persistence, clickable source links, and support for multiple AI providers (Groq, OpenAI, Anthropic, Gemini, Together AI)
 - **🔊 Interactive Audio**: Retro sound effects for buttons, hover states, and interactions
 - **⚡ Real-time Data**: Live content from GitHub and Dev.to APIs
 - **🎨 Customizable**: Sound settings and user preferences
@@ -46,6 +47,7 @@ DEVFEED is a retro-styled developer news aggregator that brings together trendin
 |---------|-------------|--------|
 | **GitHub Integration** | Trending repositories with stars, forks, and language info | ✅ |
 | **Dev.to Articles** | Latest developer articles with reading time and reactions | ✅ |
+| **AI Summarization** | AI-powered "Today's Top Tech 3 Lines" summaries with authentication, manual refresh, database persistence, clickable source cards, and support for 5 AI providers | ✅ |
 | **Favorites System** | Save items across all platforms | ✅ |
 | **User Authentication** | Secure login/signup with Clerk | ✅ |
 | **Retro UI/UX** | Complete 90s gaming aesthetic | ✅ |
@@ -138,6 +140,27 @@ NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
 NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789
 NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789:web:abcdef
+
+# AI Provider Configuration (Choose one)
+AI_PROVIDER=groq  # Options: 'groq', 'openai', 'anthropic', 'gemini', 'together'
+
+# OpenAI (if using OpenAI)
+OPENAI_API_KEY=sk-...
+
+# Groq (if using Groq - recommended for speed and free tier)
+GROQ_API_KEY=gsk_...
+
+# Anthropic Claude (if using Anthropic)
+ANTHROPIC_API_KEY=sk-ant-...
+
+# Google Gemini (if using Gemini)
+GEMINI_API_KEY=...
+
+# Together AI (if using Together AI)
+TOGETHER_API_KEY=...
+
+# App URL (for production)
+NEXT_PUBLIC_APP_URL=https://your-domain.vercel.app
 ```
 
 ### Firebase Setup
@@ -157,7 +180,12 @@ NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789:web:abcdef
    rules_version = '2';
    service cloud.firestore {
      match /databases/{database}/documents {
+       // Favorites storage
        match /users/{userId}/favorites/{favId} {
+         allow read, write: if request.auth != null && request.auth.uid == userId;
+       }
+       // AI Summary storage
+       match /users/{userId}/summaries/{summaryId} {
          allow read, write: if request.auth != null && request.auth.uid == userId;
        }
      }
@@ -184,6 +212,7 @@ NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789:web:abcdef
 - **Home Page**: Overview of all platforms with featured content
 - **GitHub**: Trending repositories with detailed information
 - **Dev.to**: Latest developer articles and tutorials
+- **AI Summary** (`/summarize`): Today's Top Tech 3 Lines powered by AI - Requires authentication, manual refresh with loading modal, database-persisted summaries with clickable source links
 - **Favorites**: Your saved items across all platforms
 
 ### Interacting with Content
@@ -193,6 +222,15 @@ NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789:web:abcdef
 3. **Save to Favorites**: Click the "☆ FAV" button in the modal
 4. **Open Original**: Click the item title or URL to visit the original source
 5. **Manage Favorites**: Visit the Favorites page to view and remove saved items
+
+### AI Summary Feature
+
+1. **Access**: Navigate to the AI Summary page (requires authentication)
+2. **View Summaries**: See 3 personalized tech news summaries with source badges
+3. **Click to Visit**: Each summary card is clickable and links to the original source
+4. **Manual Refresh**: Click the "🔄 REFRESH" button to generate a new summary
+5. **Database Persistence**: Summaries are saved to Firestore and persist across sessions
+6. **Loading Indicator**: Retro GameBoy-style modal appears during summary generation
 
 ### Sound Controls
 
@@ -214,6 +252,11 @@ NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789:web:abcdef
 | **Firebase** | Backend-as-a-Service for favorites | 12.4.0 |
 | **Clerk** | Authentication and user management | 5.1.3 |
 | **SWR** | Data fetching and caching | 2.2.5 |
+| **OpenAI** | AI model SDK for summarization | 6.7.0 |
+| **Groq** | Fast AI inference (default provider) | Via API |
+| **Anthropic** | Claude AI for summaries | Via API |
+| **Google Gemini** | Gemini AI for summarization | Via API |
+| **Together AI** | Open-source AI models | Via API |
 
 ### Project Structure
 
@@ -223,10 +266,16 @@ devfeed/
 │   ├── api/               # API routes
 │   │   ├── devto/         # Dev.to API integration
 │   │   ├── favorites/     # Favorites CRUD operations
-│   │   └── github/        # GitHub API integration
+│   │   ├── github/        # GitHub API integration
+│   │   └── summarize/     # AI summarization endpoints
+│   │       ├── route.ts   # Main AI summary generation (multi-provider support)
+│   │       ├── get/        # Fetch saved summary
+│   │       ├── save/       # Save summary to database
+│   │       └── delete/     # Delete summary from database
 │   ├── devto/             # Dev.to page
 │   ├── favorites/         # Favorites page
 │   ├── github/            # GitHub page
+│   ├── summarize/         # AI Summary page (authenticated)
 │   ├── sign-in/           # Authentication pages
 │   ├── sign-up/
 │   ├── globals.css        # Global styles
@@ -251,10 +300,13 @@ devfeed/
 ### Data Flow
 
 1. **Content Fetching**: API routes fetch data from GitHub and Dev.to APIs
-2. **State Management**: Zustand stores manage application state
-3. **User Authentication**: Clerk handles user sessions
-4. **Favorites Storage**: Firebase Firestore stores user favorites
-5. **UI Updates**: React components re-render based on state changes
+2. **AI Summarization**: Multi-provider AI system generates personalized summaries
+3. **Database Persistence**: Firestore stores summaries per user with timestamps
+4. **Manual Refresh**: Users trigger summary updates via button click
+5. **User Authentication**: Clerk handles user sessions and protects AI summary access
+6. **Favorites Storage**: Firebase Firestore stores user favorites
+7. **State Management**: React state hooks manage application state and loading indicators
+8. **UI Updates**: React components re-render based on state changes
 
 ---
 
@@ -283,7 +335,8 @@ Ensure all environment variables are properly configured in your deployment plat
 
 - Clerk production keys
 - Firebase production configuration
-- Any additional API keys or secrets
+- AI provider API keys (Groq, OpenAI, Anthropic, Gemini, or Together AI)
+- Any additional secrets
 
 ---
 
@@ -328,6 +381,8 @@ npx tsc --noEmit     # Check TypeScript types
 | **Build fails with TypeScript errors** | Run `npm run build` to see specific errors and fix them |
 | **Favorites not working** | Check Firebase configuration and environment variables |
 | **Authentication issues** | Verify Clerk keys and configuration |
+| **AI Summary not working** | Check AI provider API key and `AI_PROVIDER` environment variable |
+| **Summaries not persisting** | Verify Firestore configuration and database rules |
 | **API rate limits** | Check external API status and rate limits |
 | **Sound not playing** | Ensure browser allows audio and check sound settings |
 
@@ -362,6 +417,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [ ] **Export Favorites** to various formats
 - [ ] **PWA**
 - [ ] **API Rate Limit Optimization**
+- [ ] **Custom AI Summary Topics** (frontend, backend, AI, etc.)
+- [ ] **AI Summary Sharing** with retro-style cards
+- [ ] **Summary History** with multiple saved summaries
 
 ---
 

@@ -193,7 +193,7 @@ export default function SignUpPage(){
                     fontSize: '14px',
                     textShadow: '0 0 8px var(--retro-secondary)'
                   }}>★</span>
-                  <span>UNLOCK ACHIEVEMENTS</span>
+                  <span>AI-POWRED SUMMARIES</span>
                 </li>
               </ul>
             </div>

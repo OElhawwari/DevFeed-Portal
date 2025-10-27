@@ -6,8 +6,12 @@ import UserInfoFloat from '@/components/UserInfoFloat'
 import SoundSettings from '@/components/SoundSettings'
 
 export const metadata = { 
-  title: '▶ DEVFEED ◀ Retro Developer Portal', 
-  description: 'A 90s pixel-style dashboard for GitHub, Dev.to, and Reddit. PRESS START!' 
+  title: 'DevFeed', 
+  description: 'AI-Powered Developer Portal For Developers By Developers',
+  icons: {
+    icon: '/favicon.ico',
+  }
+  
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

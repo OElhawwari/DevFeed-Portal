@@ -35,7 +35,6 @@ export default function HomePage(){
         {/* Window Title Bar */}
         <div className="retro-titlebar">
           <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-            <span>◉</span>
             <span>DEVFEED.EXE</span>
           </div>
           <div style={{display: 'flex', gap: '6px'}}>
@@ -167,7 +166,6 @@ export default function HomePage(){
       <section className="retro-window" style={{background: 'linear-gradient(135deg, rgba(0, 255, 136, 0.05) 0%, rgba(0, 255, 255, 0.05) 100%)'}}>
         <div className="retro-titlebar" style={{background: 'linear-gradient(90deg, var(--retro-primary) 0%, var(--retro-cyan) 100%)'}}>
           <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-            <span style={{fontSize: '12px'}}>🗂</span>
             <span>GITHUB_TRENDING.DAT</span>
           </div>
           <div style={{display: 'flex', gap: '6px'}}>
@@ -198,7 +196,6 @@ export default function HomePage(){
       <section className="retro-window" style={{background: 'linear-gradient(135deg, rgba(255, 255, 0, 0.05) 0%, rgba(255, 136, 0, 0.05) 100%)'}}>
         <div className="retro-titlebar" style={{background: 'linear-gradient(90deg, var(--retro-tertiary) 0%, var(--retro-orange) 100%)'}}>
           <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-            <span style={{fontSize: '12px'}}>📰</span>
             <span>DEVTO_ARTICLES.EXE</span>
           </div>
           <div style={{display: 'flex', gap: '6px'}}>

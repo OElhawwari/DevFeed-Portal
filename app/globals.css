@@ -32,6 +32,7 @@
   --retro-orange: #ff8800;
   --retro-purple: #8800ff;
   --retro-pink: #ff00ff;
+  --retro-sky: #00d9ff
 }
 
 * {
@@ -173,6 +174,10 @@ a {
 a:hover {
   color: var(--retro-secondary);
   text-shadow: 3px 3px 0 var(--retro-cyan), 6px 6px 0 rgba(0, 0, 0, 0.5);
+}
+
+.text-shadow-none {
+  text-shadow: none;
 }
 
 /* Enhanced Pixel Button Style */
@@ -592,6 +597,18 @@ input:focus, textarea:focus, select:focus {
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Fade in animation for summary items */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

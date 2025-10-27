@@ -433,7 +433,7 @@ export default function GameBoyModal({ isOpen, onClose, item, type }: GameBoyMod
               color: 'var(--retro-cyan)',
               textShadow: '1px 1px 0 rgba(0, 0, 0, 0.5)'
             }}>
-              ERROR CODE: 0x401_AUTH_REQUIRED<br />
+              ERROR CODE: 0x404_AUTH_REQUIRED<br />
               PRESS ANY BUTTON TO DISMISS
             </p>
           </div>
